@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:NoteZone="http://schemas.android.com/apk/res-auto" >
+
+    <!-- Main View Actions -->
+    <group android:id="@+id/group_main">
+        <item android:id="@+id/action_share"
+            android:icon="@drawable/ic_action_share"
+            android:title="@string/action_share"
+            NoteZone:showAsAction="ifRoom" />
+        <item android:id="@+id/action_upload"
+            android:icon="@drawable/ic_action_upload"
+            android:title="@string/action_upload"
+            NoteZone:showAsAction="ifRoom" />
+        <item android:id="@+id/action_search"
+            android:icon="@drawable/ic_action_search"
+            android:title="@string/action_search"
+            NoteZone:showAsAction="ifRoom" />
+    </group>
+
+    <!--Navigation Drawer Actions-->
+    <group android:id="@+id/group_drawer">
+        <item android:id="@+id/action_add_folder"
+            android:icon="@drawable/ic_action_new"
+            android:title="@string/action_upload"
+            NoteZone:showAsAction="ifRoom" />
+        <item android:id="@+id/action_edit"
+            android:icon="@drawable/ic_action_hand"
+            android:title="@string/action_search"
+            NoteZone:showAsAction="ifRoom" />
+    </group>
+</menu>

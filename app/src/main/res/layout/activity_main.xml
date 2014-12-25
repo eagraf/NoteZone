@@ -1,0 +1,40 @@
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_activity" >
+
+    <android.support.v4.widget.DrawerLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/drawer_layout_main">
+
+        <FrameLayout
+            android:id="@+id/content_frame_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:paddingBottom="128dp"
+            android:gravity="center_vertical|center_horizontal">
+            <TextView android:text="@string/create_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="16sp"
+                android:gravity="center_vertical|center_horizontal" />
+        </FrameLayout>
+        <!-- The navigation drawer -->
+        <ListView android:id="@+id/drawer_main"
+            android:layout_width="320dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:dividerHeight="0dp"
+            android:background="@color/White" />
+    </android.support.v4.widget.DrawerLayout>
+</RelativeLayout>
+
+
+
