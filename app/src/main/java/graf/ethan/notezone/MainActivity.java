@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements NewFolderDialogFragment.NewFolderDialogListener {
     private DrawerLayout mDrawerLayout;
@@ -43,13 +42,13 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         mDrawerList.setAdapter(directoryRoot.adapter);
 
         //Table stuff
-        rowBack = (TableRow) findViewById(R.id.row_back);
-        rowAddFolder = (TableRow) findViewById(R.id.row_add_folder);
-        rowList = (TableRow) findViewById(R.id.row_list);
-        rowSettings = (TableRow) findViewById(R.id.row_settings);
+        rowBack = findViewById(R.id.row_back);
+        rowAddFolder = findViewById(R.id.row_add_folder);
+        rowList = findViewById(R.id.row_list);
+        rowSettings = findViewById(R.id.row_settings);
 
-        rowBack.setVisibility(rowBack.GONE);
-        rowList.setVisibility(rowList.GONE);
+        rowBack.setVisibility(View.GONE);
+        rowList.setVisibility(View.GONE);
 
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -128,7 +127,6 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
                 return true;
             case R.id.action_add_folder:
                 showNewFolderDialog();
-                directoryUpdate();
                 return true;
             case R.id.action_edit:
                 return true;
@@ -150,6 +148,7 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
     public void onDialogPositiveClick(DialogFragment dialog, String folderName) {
         // User touched the dialog's positive button
         directoryCurrent.addChild(folderName);
+        directoryUpdate();
     }
 
     @Override
@@ -209,19 +208,19 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
     }
 
     private void directoryUpdate() {
-        if(directoryCurrent.children.isEmpty() == true) {
-            rowAddFolder.setVisibility(rowAddFolder.VISIBLE);
-            rowList.setVisibility(rowList.GONE);
+        if(directoryCurrent.children.isEmpty()) {
+            rowAddFolder.setVisibility(View.VISIBLE);
+            rowList.setVisibility(View.GONE);
         }
         else {
-            rowAddFolder.setVisibility(rowAddFolder.GONE);
-            rowList.setVisibility(rowList.VISIBLE);
+            rowAddFolder.setVisibility(View.GONE);
+            rowList.setVisibility(View.VISIBLE);
         }
         if(directoryCurrent.parent == null) {
-            rowBack.setVisibility(rowBack.GONE);
+            rowBack.setVisibility(View.GONE);
         }
         else {
-            rowBack.setVisibility(rowBack.VISIBLE);
+            rowBack.setVisibility(View.VISIBLE);
         }
     }
 }
