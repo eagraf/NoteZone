@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 /**
  * Created by Ethan on 12/22/14.
+ * Adapter for temporary directory class
  */
 public class DirectoryAdapter extends BaseAdapter {
     private final Context context;
@@ -42,13 +43,7 @@ public class DirectoryAdapter extends BaseAdapter {
         firstLine.setText(getItem(position).name);
         secondLine.setText("Ethan is pretty snazzy");
 
-        if(directoryParent.parent != null && position == 0) {
-            icon.setImageResource(R.drawable.ic_action_back);
-            directoryView.setBackgroundColor(directoryView.getResources().getColor(R.color.Orange900));
-        }
-        else {
-            icon.setImageResource(R.drawable.ic_action_collection);
-        }
+        icon.setImageResource(R.drawable.ic_action_collection);
 
         return directoryView;
     }

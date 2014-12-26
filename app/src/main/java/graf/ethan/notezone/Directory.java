@@ -27,7 +27,6 @@ public class Directory {
         this.parent = parent;
         this.context = context;
         this.adapter = new DirectoryAdapter (this.context, children, this);
-        addChild(parent);
     }
 
     public void addChild(String name) {

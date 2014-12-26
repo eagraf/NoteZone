@@ -1,0 +1,21 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="6dip"
+    android:descendantFocusability="blocksDescendants"
+    android:onClick="showSettings"
+    android:id="@+id/create_folder_text">
+
+    <TextView
+        android:id="@+id/firstLine"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="false"
+        android:gravity="center|center_vertical|center_horizontal"
+        android:text="@string/create_new_folder"
+        android:textSize="16sp"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

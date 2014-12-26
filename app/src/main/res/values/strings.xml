@@ -4,6 +4,7 @@
     <string name="app_name">NoteZone</string>
     <string name="my_notes">My Notes</string>
     <string name="create_note">Press the create button to make a new note.</string>
+    <string name="create_new_folder">Tap the create button to make a new folder.</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

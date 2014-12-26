@@ -6,15 +6,14 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.internal.widget.AdapterViewCompat;
 import android.support.v7.widget.PopupMenu;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements NewFolderDialogFragment.NewFolderDialogListener {
     private DrawerLayout mDrawerLayout;
@@ -22,11 +21,8 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
     private ActionBarDrawerToggle mDrawerToggle;
     private Directory directoryRoot;
     private Directory directoryCurrent;
-    private MenuInflater inflater = getMenuInflater();
-    //private ArrayAdapter mDrawerListAdapter;
-    //private ArrayList<String> folders = new ArrayList<String>();
-    //private List<String> listFolderGroup = new ArrayList<String>();
-    //private HashMap<String, List<String>> listFolderChild = new HashMap<String, List<String>>();
+    private MenuInflater menuInflater = getMenuInflater();
+    private View header1, header2, footer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +33,18 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         directoryRoot = new Directory(getString(R.string.my_notes), this);
         directoryCurrent = directoryRoot;
 
+        //Header and Footer Views
+        header1 = getLayoutInflater().inflate(R.layout.folder_back, null);
+        header2 = getLayoutInflater().inflate(R.layout.folder_create, null);
+        footer = getLayoutInflater().inflate(R.layout.folder_setting, null);
+
         //Initializing Nav Drawer stuff
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main);
         mDrawerList = (ListView) findViewById(R.id.drawer_main);
+        mDrawerList.addHeaderView(header2);
+        mDrawerList.addFooterView(footer);
+        mDrawerList.setHeaderDividersEnabled(false);
         mDrawerList.setAdapter(directoryRoot.adapter);
-        //mDrawerListAdapter = new ExpandableListAdapter(this, listFolderGroup, listFolderChild);
-        //mDrawerListAdapter = new ArrayAdapter<String>(this, R.layout.folder_list_item, folders);
-        // Set the adapter for the list view
-        //mDrawerList.setAdapter(mDrawerListAdapter);
 
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -90,11 +90,10 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
-        inflater.inflate(R.menu.menu_main, menu);
+        menuInflater.inflate(R.menu.menu_main, menu);
 
         //Hide Drawer Icons
         menu.setGroupVisible(R.id.group_drawer, false);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -123,6 +122,9 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
             case R.id.action_upload:
                 return true;
             case R.id.action_add_folder:
+                if(directoryCurrent.children.isEmpty() == true) {
+                    mDrawerList.removeHeaderView(header2);
+                }
                 showNewFolderDialog();
                 return true;
             case R.id.action_edit:
@@ -179,16 +181,54 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
 
     private void selectItem(int position) {
         // update selected item and title, then close the drawers
-        mDrawerList.setItemChecked(position, true);
-        directoryCurrent = directoryCurrent.children.get(position);
+        mDrawerList.setItemChecked(position - 2, true);
+        directoryCurrent = directoryCurrent.children.get(position - 2);
         getSupportActionBar().setTitle(directoryCurrent.name);
         mDrawerList.setAdapter(directoryCurrent.adapter);
+        if(directoryCurrent.parent != null) {
+            TextView headerText = (TextView) header1.findViewById(R.id.firstLine);
+            headerText.setText(directoryCurrent.parent.name);
+            mDrawerList.addHeaderView(header1);
+        }
+        else {
+            mDrawerList.removeHeaderView(header1);
+        }
+        if(directoryCurrent.children.isEmpty() == false){
+            mDrawerList.removeHeaderView(header2);
+        }
+        else {
+            mDrawerList.addHeaderView(header2);
+        }
     }
 
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(new PopupItemClickListener());
-        inflater.inflate(R.menu.menu_directory, popup.getMenu());
+        menuInflater.inflate(R.menu.menu_directory, popup.getMenu());
         popup.show();
+    }
+
+    public void showSettings(View v) {
+
+    }
+
+    public void directoryBack(View v) {
+        directoryCurrent = directoryCurrent.parent;
+        getSupportActionBar().setTitle(directoryCurrent.name);
+        mDrawerList.setAdapter(directoryCurrent.adapter);
+        if(directoryCurrent.parent != null) {
+            TextView headerText = (TextView) header1.findViewById(R.id.firstLine);
+            headerText.setText(directoryCurrent.parent.name);
+            mDrawerList.addHeaderView(header1);
+        }
+        else {
+            mDrawerList.removeHeaderView(header1);
+        }
+        if(directoryCurrent.children.isEmpty() == false){
+            mDrawerList.removeHeaderView(header2);
+        }
+        else {
+            mDrawerList.addHeaderView(header2);
+        }
     }
 }
