@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Top View-->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_activity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/main_activity" >
+    android:layout_height="match_parent">
     <!--Drawer Layout for Navigation Drawer-->
     <android.support.v4.widget.DrawerLayout
         android:layout_width="match_parent"
@@ -18,7 +17,10 @@
             android:orientation="vertical"
             android:clickable="true"
             android:paddingBottom="128dp"
-            android:gravity="center_vertical|center_horizontal">
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
             <TextView android:text="@string/create_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -27,111 +29,106 @@
                 android:gravity="center_vertical|center_horizontal" />
         </FrameLayout>
         <!-- The navigation drawer. Uses Table Layout-->
-        <TableLayout android:id="@+id/drawer_main"
+        <RelativeLayout android:id="@+id/drawer_main"
             android:layout_width="320dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="@color/White"
-            android:stretchColumns="0">
+            android:background="@color/White">
 
-            <!--Row 0, for back navigation-->
-            <TableRow android:id="@+id/row_back"
-                android:layout_width="match_parent">
-                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="match_parent"
-                    android:layout_height="?android:attr/listPreferredItemHeight"
-                    android:padding="6dip"
-                    android:onClick="directoryBack"
-                    android:background="@color/Orange700"
-                    android:id="@+id/folder_back">
-
-                    <ImageView
-                        android:id="@+id/icon_back"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginRight="6dip"
-                        android:src="@drawable/ic_action_back" />
-
-                    <TextView
-                        android:id="@+id/text_back"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignWithParentIfMissing="true"
-                        android:layout_toRightOf="@id/icon_back"
-                        android:text="@string/back"
-                        android:gravity="center_vertical"
-                        android:textSize="16sp" />
-
-                </RelativeLayout>
-            </TableRow>
-
-            <!--Row 1, Text that prompts the user to add new folders-->
-            <TableRow android:id="@+id/row_add_folder"
+            <!--Back navigation-->
+            <RelativeLayout android:id="@+id/nav_back"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView android:text="@string/create_new_folder"
+                android:layout_height="?android:attr/listPreferredItemHeight"
+                android:padding="6dp"
+                android:onClick="directoryBack"
+                android:background="@color/Orange200"
+                android:layout_gravity="top">
+
+                <ImageView
+                    android:id="@+id/icon_back"
                     android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="6dip"
+                    android:src="@drawable/ic_action_back" />
+
+                <TextView
+                    android:id="@+id/text_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignWithParentIfMissing="true"
+                    android:layout_toRightOf="@id/icon_back"
+                    android:text="@string/back"
+                    android:gravity="center_vertical"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <!--Text that prompts the user to add new folders-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nav_back"
+                android:gravity="center">
+                <TextView android:id="@+id/nav_add_folder"
+                    android:text="@string/create_new_folder"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textSize="16sp"
                     android:gravity="center"
                     android:padding="32dp"/>
-            </TableRow>
+            </RelativeLayout>-->
 
-            <!--Row 2, actual folder list-->
-            <TableRow android:id="@+id/row_list"
-                android:layout_width="match_parent">
-                <ListView android:id="@+id/folder_list"
+            <!--ListView for directories-->
+            <RelativeLayout android:id="@+id/nav_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nav_back">
+                <ListView android:id="@+id/drawer_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
                     android:choiceMode="singleChoice"
                     android:dividerHeight="0dp"
-                    android:background="#FFFFFF"/>
-            </TableRow>
+                    android:background="@color/White"
+                    android:layout_gravity="center" />
+            </RelativeLayout>
 
-            <!--Row 3, settings-->
-            <TableRow android:id="@+id/row_settings"
+            <!--Settings-->
+            <RelativeLayout android:id="@+id/nav_settings"
                 android:layout_width="match_parent"
-                android:gravity="end">
-                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="match_parent"
-                    android:layout_height="?android:attr/listPreferredItemHeight"
-                    android:padding="6dip"
-                    android:onClick="showSettings"
-                    android:id="@+id/settings">
+                android:layout_height="?android:attr/listPreferredItemHeight"
+                android:layout_gravity="bottom"
+                android:background="@color/Orange200"
+                android:padding="6dip"
+                android:onClick="showSettings"
+                android:layout_alignParentBottom="true"
+                >
+                <ImageView
+                    android:id="@+id/icon_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="6dip"
+                    android:src="@drawable/ic_action_settings" />
 
-                    <ImageView
-                        android:id="@+id/icon_settings"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginRight="6dip"
-                        android:src="@drawable/ic_action_settings" />
-
-                    <TextView
-                        android:id="@+id/text_settings"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignWithParentIfMissing="true"
-                        android:layout_toRightOf="@id/icon_settings"
-                        android:gravity="center_vertical"
-                        android:text="@string/action_settings"
-                        android:textSize="16sp" />
-                </RelativeLayout>
-            </TableRow>
-        </TableLayout>
+                <TextView
+                    android:id="@+id/text_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignWithParentIfMissing="true"
+                    android:layout_toRightOf="@id/icon_settings"
+                    android:gravity="center_vertical"
+                    android:text="@string/action_settings"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+        </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>
-
-
-

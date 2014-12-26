@@ -12,7 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -20,7 +22,7 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-    private TableLayout mDrawerTable;
+    private RelativeLayout mDrawerTable;
     private Directory directoryRoot;
     private Directory directoryCurrent;
     private MenuInflater menuInflater = getMenuInflater();
@@ -37,18 +39,17 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
 
         //Initializing Nav Drawer stuff
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main);
-        mDrawerList = (ListView) findViewById(R.id.folder_list);
-        mDrawerTable = (TableLayout) findViewById(R.id.drawer_main);
+        mDrawerList = (ListView) findViewById(R.id.drawer_list);
+        mDrawerTable = (RelativeLayout) findViewById(R.id.drawer_main);
         mDrawerList.setAdapter(directoryRoot.adapter);
 
         //Table stuff
-        rowBack = findViewById(R.id.row_back);
-        rowAddFolder = findViewById(R.id.row_add_folder);
-        rowList = findViewById(R.id.row_list);
-        rowSettings = findViewById(R.id.row_settings);
+        rowBack = findViewById(R.id.nav_back);
+        rowAddFolder = findViewById(R.id.nav_add_folder);
+        rowList = findViewById(R.id.nav_list);
+        rowSettings = findViewById(R.id.nav_settings);
 
         rowBack.setVisibility(View.GONE);
-        rowList.setVisibility(View.GONE);
 
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -210,11 +211,9 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
     private void directoryUpdate() {
         if(directoryCurrent.children.isEmpty()) {
             rowAddFolder.setVisibility(View.VISIBLE);
-            rowList.setVisibility(View.GONE);
         }
         else {
             rowAddFolder.setVisibility(View.GONE);
-            rowList.setVisibility(View.VISIBLE);
         }
         if(directoryCurrent.parent == null) {
             rowBack.setVisibility(View.GONE);
