@@ -13,16 +13,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements NewFolderDialogFragment.NewFolderDialogListener {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
+    private TableLayout mDrawerTable;
     private Directory directoryRoot;
     private Directory directoryCurrent;
     private MenuInflater menuInflater = getMenuInflater();
-    private View header1, header2, footer;
+    private View rowBack, rowAddFolder, rowList, rowSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,18 +36,20 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         directoryRoot = new Directory(getString(R.string.my_notes), this);
         directoryCurrent = directoryRoot;
 
-        //Header and Footer Views
-        header1 = getLayoutInflater().inflate(R.layout.folder_back, null);
-        header2 = getLayoutInflater().inflate(R.layout.folder_create, null);
-        footer = getLayoutInflater().inflate(R.layout.folder_setting, null);
-
         //Initializing Nav Drawer stuff
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main);
-        mDrawerList = (ListView) findViewById(R.id.drawer_main);
-        mDrawerList.addHeaderView(header2);
-        mDrawerList.addFooterView(footer);
-        mDrawerList.setHeaderDividersEnabled(false);
+        mDrawerList = (ListView) findViewById(R.id.folder_list);
+        mDrawerTable = (TableLayout) findViewById(R.id.drawer_main);
         mDrawerList.setAdapter(directoryRoot.adapter);
+
+        //Table stuff
+        rowBack = (TableRow) findViewById(R.id.row_back);
+        rowAddFolder = (TableRow) findViewById(R.id.row_add_folder);
+        rowList = (TableRow) findViewById(R.id.row_list);
+        rowSettings = (TableRow) findViewById(R.id.row_settings);
+
+        rowBack.setVisibility(rowBack.GONE);
+        rowList.setVisibility(rowList.GONE);
 
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -100,7 +105,7 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerTable);
         menu.setGroupVisible(R.id.group_main, !drawerOpen);
         menu.setGroupVisible(R.id.group_drawer, drawerOpen);
         return super.onPrepareOptionsMenu(menu);
@@ -122,10 +127,8 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
             case R.id.action_upload:
                 return true;
             case R.id.action_add_folder:
-                if(directoryCurrent.children.isEmpty() == true) {
-                    mDrawerList.removeHeaderView(header2);
-                }
                 showNewFolderDialog();
+                directoryUpdate();
                 return true;
             case R.id.action_edit:
                 return true;
@@ -181,24 +184,11 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
 
     private void selectItem(int position) {
         // update selected item and title, then close the drawers
-        mDrawerList.setItemChecked(position - 2, true);
-        directoryCurrent = directoryCurrent.children.get(position - 2);
+        mDrawerList.setItemChecked(position, true);
+        directoryCurrent = directoryCurrent.children.get(position);
         getSupportActionBar().setTitle(directoryCurrent.name);
         mDrawerList.setAdapter(directoryCurrent.adapter);
-        if(directoryCurrent.parent != null) {
-            TextView headerText = (TextView) header1.findViewById(R.id.firstLine);
-            headerText.setText(directoryCurrent.parent.name);
-            mDrawerList.addHeaderView(header1);
-        }
-        else {
-            mDrawerList.removeHeaderView(header1);
-        }
-        if(directoryCurrent.children.isEmpty() == false){
-            mDrawerList.removeHeaderView(header2);
-        }
-        else {
-            mDrawerList.addHeaderView(header2);
-        }
+        directoryUpdate();
     }
 
     public void showPopup(View v) {
@@ -214,21 +204,24 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
 
     public void directoryBack(View v) {
         directoryCurrent = directoryCurrent.parent;
-        getSupportActionBar().setTitle(directoryCurrent.name);
         mDrawerList.setAdapter(directoryCurrent.adapter);
-        if(directoryCurrent.parent != null) {
-            TextView headerText = (TextView) header1.findViewById(R.id.firstLine);
-            headerText.setText(directoryCurrent.parent.name);
-            mDrawerList.addHeaderView(header1);
+        directoryUpdate();
+    }
+
+    private void directoryUpdate() {
+        if(directoryCurrent.children.isEmpty() == true) {
+            rowAddFolder.setVisibility(rowAddFolder.VISIBLE);
+            rowList.setVisibility(rowList.GONE);
         }
         else {
-            mDrawerList.removeHeaderView(header1);
+            rowAddFolder.setVisibility(rowAddFolder.GONE);
+            rowList.setVisibility(rowList.VISIBLE);
         }
-        if(directoryCurrent.children.isEmpty() == false){
-            mDrawerList.removeHeaderView(header2);
+        if(directoryCurrent.parent == null) {
+            rowBack.setVisibility(rowBack.GONE);
         }
         else {
-            mDrawerList.addHeaderView(header2);
+            rowBack.setVisibility(rowBack.VISIBLE);
         }
     }
 }
