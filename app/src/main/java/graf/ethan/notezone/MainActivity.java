@@ -12,16 +12,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 public class MainActivity extends ActionBarActivity implements NewFolderDialogFragment.NewFolderDialogListener {
+    //Drawer Variables
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private RelativeLayout mDrawerTable;
+
+    //File List Variables
+    private ListView mFileList;
+    private String[] testArray;
+
+    //Directory Variables
     private Directory directoryRoot;
     private Directory directoryCurrent;
+
+    //Other
     private MenuInflater menuInflater = getMenuInflater();
     private View rowBack, rowAddFolder, rowList, rowSettings;
 
@@ -33,6 +43,11 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         //Creates root and current directories
         directoryRoot = new Directory(getString(R.string.my_notes), this);
         directoryCurrent = directoryRoot;
+
+        //Initializing File List
+        testArray = getResources().getStringArray(R.array.array_test);
+        mFileList = (ListView) findViewById(R.id.file_list);
+        mFileList.setAdapter(new ArrayAdapter<String>(this, R.layout.text_list_item, testArray));
 
         //Initializing Nav Drawer stuff
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main);

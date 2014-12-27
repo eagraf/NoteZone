@@ -7,6 +7,7 @@
     <string name="create_new_folder">Tap the create button to make a new folder.</string>
     <string name="back">Back</string>
 
+    <!--Drawer Stuff-->s
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
@@ -23,4 +24,17 @@
     <string name="action_directory_edit">Edit</string>
     <string name="action_directory_copy">Copy</string>
     <string name="action_directory_delete">Delete</string>
+
+    <!--Test Array-->
+    <string-array name="array_test" >
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+        <item>Pluto</item>
+    </string-array>
 </resources>
