@@ -90,7 +90,7 @@
                 android:layout_below="@+id/nav_back">
                 <ListView android:id="@+id/drawer_list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:choiceMode="singleChoice"
                     android:dividerHeight="0dp"
                     android:background="@color/White"

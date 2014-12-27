@@ -12,11 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
 public class MainActivity extends ActionBarActivity implements NewFolderDialogFragment.NewFolderDialogListener {
     private DrawerLayout mDrawerLayout;
@@ -50,6 +47,7 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         rowSettings = findViewById(R.id.nav_settings);
 
         rowBack.setVisibility(View.GONE);
+        rowList.setVisibility(View.GONE);
 
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -182,6 +180,7 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         }
     }
 
+    /*Opens a new directory every time a list item is tapped*/
     private void selectItem(int position) {
         // update selected item and title, then close the drawers
         mDrawerList.setItemChecked(position, true);
@@ -191,6 +190,7 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         directoryUpdate();
     }
 
+    /*Displays popup for overflow icon in list view items*/
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(new PopupItemClickListener());
@@ -198,22 +198,27 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         popup.show();
     }
 
+    /*Creates intent for showing the settings activity*/
     public void showSettings(View v) {
 
     }
 
+    /*Moves the directory back one level*/
     public void directoryBack(View v) {
         directoryCurrent = directoryCurrent.parent;
         mDrawerList.setAdapter(directoryCurrent.adapter);
         directoryUpdate();
     }
 
+    /*Updates views in the nav drawer every time it is called*/
     private void directoryUpdate() {
         if(directoryCurrent.children.isEmpty()) {
             rowAddFolder.setVisibility(View.VISIBLE);
+            rowList.setVisibility(View.GONE);
         }
         else {
             rowAddFolder.setVisibility(View.GONE);
+            rowList.setVisibility(View.VISIBLE);
         }
         if(directoryCurrent.parent == null) {
             rowBack.setVisibility(View.GONE);
