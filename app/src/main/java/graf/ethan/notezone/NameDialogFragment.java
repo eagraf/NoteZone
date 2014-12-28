@@ -14,18 +14,30 @@ import android.widget.EditText;
  * Created by Ethan on 12/19/14.
  * Fragment for dialog asking for folder name
  */
-public class NewFolderDialogFragment extends DialogFragment {
+public class NameDialogFragment extends DialogFragment {
 
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
-    public interface NewFolderDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog, String folderName);
-        public void onDialogNegativeClick(DialogFragment dialog);
+    public interface NameDialogListener {
+        public void onDialogPositiveClick(NameDialogFragment dialog, String folderName);
+        public void onDialogNegativeClick(NameDialogFragment dialog);
     }
 
     // Use this instance of the interface to deliver action events
-    NewFolderDialogListener mListener;
+    NameDialogListener mListener;
+
+    public String title = "default_title";
+    public String name = "default_name";
+    public String type;
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
     @Override
@@ -34,7 +46,7 @@ public class NewFolderDialogFragment extends DialogFragment {
         // Verify that the host activity implements the callback interface
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (NewFolderDialogListener) activity;
+            mListener = (NameDialogListener) activity;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(activity.toString()
@@ -56,19 +68,19 @@ public class NewFolderDialogFragment extends DialogFragment {
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view);
-        builder.setTitle(R.string.dialog_new_folder).setPositiveButton(R.string.dialog_done, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-            String folderName = editText.getText().toString();
-            if (folderName.equals("")) {
-                folderName = getResources().getString(R.string.dialog_new_folder);
+        builder.setTitle(title).setPositiveButton(R.string.dialog_done, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                String folderName = editText.getText().toString();
+                if (folderName.equals("")) {
+                    folderName = getResources().getString(R.string.create_new_folder);
+                }
+                mListener.onDialogPositiveClick(NameDialogFragment.this, folderName);
             }
-            mListener.onDialogPositiveClick(NewFolderDialogFragment.this, folderName);
-                    }
-                })
+        })
                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog
-                        mListener.onDialogNegativeClick(NewFolderDialogFragment.this);
+                        mListener.onDialogNegativeClick(NameDialogFragment.this);
                     }
                 });
         // Create the AlertDialog object and return it

@@ -16,7 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-public class MainActivity extends ActionBarActivity implements NewFolderDialogFragment.NewFolderDialogListener {
+public class MainActivity extends ActionBarActivity implements NameDialogFragment.NameDialogListener {
     //Drawer Variables
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -45,9 +45,9 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         directoryCurrent = directoryRoot;
 
         //Initializing File List
-        testArray = getResources().getStringArray(R.array.array_test);
+        //testArray = getResources().getStringArray(R.array.array_test);
         mFileList = (ListView) findViewById(R.id.file_list);
-        mFileList.setAdapter(new ArrayAdapter<String>(this, R.layout.text_list_item, testArray));
+        mFileList.setAdapter(new ArrayAdapter<String>(this, R.layout.text_list_item, directoryCurrent.files));
 
         //Initializing Nav Drawer stuff
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main);
@@ -141,6 +141,7 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
                 return true;
             case R.id.action_add_folder:
                 showNewFolderDialog();
+                directoryUpdate();
                 return true;
             case R.id.action_edit:
                 return true;
@@ -151,22 +152,38 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
 
     public void showNewFolderDialog() {
         // Create an instance of the dialog fragment and show it
-        DialogFragment dialog = new NewFolderDialogFragment();
-        dialog.show(getSupportFragmentManager(), "NewFolderDialogFragment");
+        NameDialogFragment dialog = new NameDialogFragment();
+        dialog.setTitle(getResources().getString(R.string.dialog_new_folder));
+        dialog.setType("new_folder");
+        dialog.show(getSupportFragmentManager(), "NameDialogFragment");
+
+    }
+
+    public void showNewFileDialog() {
+        //Create a dialog fragment for file names
+        NameDialogFragment dialog = new NameDialogFragment();
+        dialog.setTitle(getResources().getString(R.string.dialog_new_note));
+        dialog.setType("new_file");
+        dialog.show(getSupportFragmentManager(), "NameDialogFragment");
     }
 
     // The dialog fragment receives a reference to this Activity through the
     // Fragment.onAttach() callback, which it uses to call the following methods
     // defined by the NoticeDialogFragment.NoticeDialogListener interface
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog, String folderName) {
+    public void onDialogPositiveClick(NameDialogFragment dialog, String name) {
         // User touched the dialog's positive button
-        directoryCurrent.addChild(folderName);
-        directoryUpdate();
+        if(dialog.type == "new_folder") {
+            directoryCurrent.addChild(name);
+            directoryUpdate();
+        }
+        else if(dialog.type == "new_file") {
+            directoryCurrent.addFile(name);
+        }
     }
 
     @Override
-    public void onDialogNegativeClick(DialogFragment dialog) {
+    public void onDialogNegativeClick(NameDialogFragment dialog) {
         // User touched the dialog's negative button
     }
 
@@ -202,28 +219,10 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         directoryCurrent = directoryCurrent.children.get(position);
         getSupportActionBar().setTitle(directoryCurrent.name);
         mDrawerList.setAdapter(directoryCurrent.adapter);
+        mFileList.setAdapter(new ArrayAdapter<String>(this, R.layout.text_list_item, directoryCurrent.files));
         directoryUpdate();
     }
 
-    /*Displays popup for overflow icon in list view items*/
-    public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(new PopupItemClickListener());
-        menuInflater.inflate(R.menu.menu_directory, popup.getMenu());
-        popup.show();
-    }
-
-    /*Creates intent for showing the settings activity*/
-    public void showSettings(View v) {
-
-    }
-
-    /*Moves the directory back one level*/
-    public void directoryBack(View v) {
-        directoryCurrent = directoryCurrent.parent;
-        mDrawerList.setAdapter(directoryCurrent.adapter);
-        directoryUpdate();
-    }
 
     /*Updates views in the nav drawer every time it is called*/
     private void directoryUpdate() {
@@ -241,5 +240,31 @@ public class MainActivity extends ActionBarActivity implements NewFolderDialogFr
         else {
             rowBack.setVisibility(View.VISIBLE);
         }
+    }
+
+    /*Displays popup for overflow icon in list view items*/
+    public void onClickShowPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(new PopupItemClickListener());
+        menuInflater.inflate(R.menu.menu_directory, popup.getMenu());
+        popup.show();
+    }
+
+    /*Creates intent for showing the settings activity*/
+    public void onClickShowSettings(View v) {
+
+    }
+
+    /*Adds a file*/
+    public void onClickAddFile(View v) {
+        showNewFileDialog();
+    }
+
+    /*Moves the directory back one level*/
+    public void onClickDirectoryBack(View v) {
+        directoryCurrent = directoryCurrent.parent;
+        mDrawerList.setAdapter(directoryCurrent.adapter);
+        mFileList.setAdapter(new ArrayAdapter<String>(this, R.layout.text_list_item, directoryCurrent.files));
+        directoryUpdate();
     }
 }

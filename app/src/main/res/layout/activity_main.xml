@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Top View-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -35,6 +36,19 @@
                 android:dividerHeight="0dp"
                 android:background="@color/White"
                 android:layout_gravity="center" />
+
+            <!--Floating Action Button-->
+            <graf.ethan.notezone.FloatingActionButton
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:src="@drawable/ic_action_new"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                custom:bg_color="@color/Orange"
+                custom:bg_color_pressed="@color/Orange800"
+                android:tint="@android:color/white"
+                android:layout_gravity="bottom|right"
+                android:onClick="onClickAddFile"/>
         </FrameLayout>
         <!-- The navigation drawer. Uses Table Layout-->
         <RelativeLayout android:id="@+id/drawer_main"
@@ -48,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/listPreferredItemHeightSmall"
                 android:padding="6dp"
-                android:onClick="directoryBack"
+                android:onClick="onClickDirectoryBack"
                 android:background="@color/Orange200"
                 android:layout_gravity="top">
 
@@ -111,7 +125,7 @@
                 android:layout_gravity="bottom"
                 android:background="@color/Orange200"
                 android:padding="6dip"
-                android:onClick="showSettings"
+                android:onClick="onClickShowSettings"
                 android:layout_alignParentBottom="true" >
                 <ImageView
                     android:id="@+id/icon_settings"

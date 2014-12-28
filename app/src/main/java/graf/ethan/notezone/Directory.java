@@ -14,6 +14,7 @@ public class Directory {
     public ArrayList<Directory> children = new ArrayList<> ();
     public DirectoryAdapter adapter;
     public Context context;
+    public ArrayList<String> files = new ArrayList<> ();
 
     //For root directories
     public Directory(String name, Context context) {
@@ -37,6 +38,10 @@ public class Directory {
     public void addChild(Directory child) {
         children.add(child);
         adapter.mIdMap.put(child.name, adapter.mIdMap.size());
+    }
+
+    public void addFile(String name) {
+        files.add(name);
     }
 
     @Override

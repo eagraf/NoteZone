@@ -13,6 +13,18 @@
     <color name="Orange800">#EF6C00</color>
     <color name="Orange900">#E65100</color>
 
+    <!--Grey color palette.-->
+    <color name="Grey50">#FAFAFA</color>
+    <color name="Grey100">#F5F5F5</color>
+    <color name="Grey200">#EEEEEE</color>
+    <color name="Grey300">#E0E0E0</color>
+    <color name="Grey400">#BDBDBD</color>
+    <color name="Grey500">#9E9E9E</color>
+    <color name="Grey600">#757575</color>
+    <color name="Grey700">#616161</color>
+    <color name="Grey800">#424242</color>
+    <color name="Grey900">#212121</color>
+
     <color name="White">#FFFFFF</color>
     <color name="Clear">#00000000</color>
 </resources>

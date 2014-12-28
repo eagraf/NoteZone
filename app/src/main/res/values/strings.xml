@@ -13,6 +13,7 @@
 
     <!--Dialog Strings-->
     <string name="dialog_new_folder">New Folder</string>
+    <string name="dialog_new_note">New Note</string>
     <string name="dialog_done">Done</string>
     <string name="dialog_cancel">Cancel</string>
 
