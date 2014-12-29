@@ -72,7 +72,7 @@ public class NameDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int id) {
                 String folderName = editText.getText().toString();
                 if (folderName.equals("")) {
-                    folderName = getResources().getString(R.string.create_new_folder);
+                    folderName = getResources().getString(R.string.dialog_new_folder);
                 }
                 mListener.onDialogPositiveClick(NameDialogFragment.this, folderName);
             }

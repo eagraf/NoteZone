@@ -8,4 +8,4 @@
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:id="@android:id/text1" />
+    android:id="@+id/text1" />

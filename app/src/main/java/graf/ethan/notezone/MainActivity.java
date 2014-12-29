@@ -1,5 +1,6 @@
 package graf.ethan.notezone;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -25,41 +26,51 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
 
     //File List Variables
     private ListView mFileList;
-    private String[] testArray;
 
-    //Directory Variables
-    private Directory directoryRoot;
-    private Directory directoryCurrent;
+    //File Variables
+    private FileManager fileManager;
+    private AdapterFile fileAdapter;
+    private AdapterFolder folderAdapter;
 
     //Other
     private MenuInflater menuInflater = getMenuInflater();
-    private View rowBack, rowAddFolder, rowList, rowSettings;
+    private View rowBack, rowAddFolder, rowList;
+
+    //Shared Preferences
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Get Shared Preferences
+        preferences = getPreferences(MODE_PRIVATE);
+
         //Creates root and current directories
-        directoryRoot = new Directory(getString(R.string.my_notes), this);
-        directoryCurrent = directoryRoot;
+        //directoryRoot = new Directory(getString(R.string.my_notes), this);
+        //directoryCurrent = directoryRoot;
+
+        //FileManager stuff
+        fileManager = new FileManager(this, preferences);
+        fileAdapter = new AdapterFile(this, fileManager.getFileChildren(), fileManager);
+        folderAdapter = new AdapterFolder(this, fileManager.getFolderChildren(), fileManager);
 
         //Initializing File List
         //testArray = getResources().getStringArray(R.array.array_test);
         mFileList = (ListView) findViewById(R.id.file_list);
-        mFileList.setAdapter(new ArrayAdapter<String>(this, R.layout.text_list_item, directoryCurrent.files));
+        mFileList.setAdapter(fileAdapter);
 
         //Initializing Nav Drawer stuff
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main);
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mDrawerTable = (RelativeLayout) findViewById(R.id.drawer_main);
-        mDrawerList.setAdapter(directoryRoot.adapter);
+        mDrawerList.setAdapter(folderAdapter);
 
         //Table stuff
         rowBack = findViewById(R.id.nav_back);
         rowAddFolder = findViewById(R.id.nav_add_folder);
         rowList = findViewById(R.id.nav_list);
-        rowSettings = findViewById(R.id.nav_settings);
 
         rowBack.setVisibility(View.GONE);
         rowList.setVisibility(View.GONE);
@@ -90,6 +101,20 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        directoryUpdate();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (preferences.getBoolean("initialize", true)) {
+            // Do first run stuff here then set 'firstrun' as false
+            // using the following line to edit/commit prefs
+            getSupportActionBar().setSubtitle("FUCK");
+            preferences.edit().putBoolean("initialize", false).commit();
+        }
     }
 
     @Override
@@ -173,12 +198,14 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
     @Override
     public void onDialogPositiveClick(NameDialogFragment dialog, String name) {
         // User touched the dialog's positive button
-        if(dialog.type == "new_folder") {
-            directoryCurrent.addChild(name);
+        if(dialog.type.equals("new_folder")) {
+            folderAdapter.addFolder(name);
+            mDrawerList.setAdapter(folderAdapter);
             directoryUpdate();
         }
-        else if(dialog.type == "new_file") {
-            directoryCurrent.addFile(name);
+        else if(dialog.type.equals("new_file")) {
+            fileAdapter.addFile(name);
+            mFileList.setAdapter(fileAdapter);
         }
     }
 
@@ -216,17 +243,19 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
     private void selectItem(int position) {
         // update selected item and title, then close the drawers
         mDrawerList.setItemChecked(position, true);
-        directoryCurrent = directoryCurrent.children.get(position);
-        getSupportActionBar().setTitle(directoryCurrent.name);
-        mDrawerList.setAdapter(directoryCurrent.adapter);
-        mFileList.setAdapter(new ArrayAdapter<String>(this, R.layout.text_list_item, directoryCurrent.files));
+        fileManager.selectFolder(folderAdapter.getItem(position));
+        getSupportActionBar().setTitle(fileManager.getCurrent().getName());
+        folderAdapter = new AdapterFolder(this, fileManager.getFolderChildren(), fileManager);
+        mDrawerList.setAdapter(folderAdapter);
+        fileAdapter = new AdapterFile(this, fileManager.getFileChildren(), fileManager);
+        mFileList.setAdapter(fileAdapter);
         directoryUpdate();
     }
 
 
     /*Updates views in the nav drawer every time it is called*/
     private void directoryUpdate() {
-        if(directoryCurrent.children.isEmpty()) {
+        if(fileManager.getCurrent().listFiles().length == 0) {
             rowAddFolder.setVisibility(View.VISIBLE);
             rowList.setVisibility(View.GONE);
         }
@@ -234,7 +263,7 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
             rowAddFolder.setVisibility(View.GONE);
             rowList.setVisibility(View.VISIBLE);
         }
-        if(directoryCurrent.parent == null) {
+        if(fileManager.getCurrent().equals(fileManager.getMyNotes())) {
             rowBack.setVisibility(View.GONE);
         }
         else {
@@ -262,9 +291,14 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
 
     /*Moves the directory back one level*/
     public void onClickDirectoryBack(View v) {
-        directoryCurrent = directoryCurrent.parent;
-        mDrawerList.setAdapter(directoryCurrent.adapter);
-        mFileList.setAdapter(new ArrayAdapter<String>(this, R.layout.text_list_item, directoryCurrent.files));
+        fileManager.selectParent();
+        getSupportActionBar().setTitle(fileManager.getCurrent().getName());
+        folderAdapter = new AdapterFolder(this, fileManager.getFolderChildren(), fileManager);
+        mDrawerList.setAdapter(folderAdapter);
+        fileAdapter = new AdapterFile(this, fileManager.getFileChildren(), fileManager);
+        mFileList.setAdapter(fileAdapter);
         directoryUpdate();
     }
+
+
 }
