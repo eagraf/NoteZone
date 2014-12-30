@@ -1,7 +1,9 @@
 package graf.ethan.notezone;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -60,12 +62,16 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
         //testArray = getResources().getStringArray(R.array.array_test);
         mFileList = (ListView) findViewById(R.id.file_list);
         mFileList.setAdapter(fileAdapter);
+        mFileList.setOnItemClickListener(new FileListItemClickListener());
 
         //Initializing Nav Drawer stuff
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main);
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mDrawerTable = (RelativeLayout) findViewById(R.id.drawer_main);
         mDrawerList.setAdapter(folderAdapter);
+
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         //Table stuff
         rowBack = findViewById(R.id.nav_back);
@@ -74,9 +80,6 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
 
         rowBack.setVisibility(View.GONE);
         rowList.setVisibility(View.GONE);
-
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         //Enable ActionBar app icon to behave as action to toggle nav drawer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -222,6 +225,12 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
         }
     }
 
+    private class FileListItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        }
+    }
+
     /*Click listener for popup menus */
     private class PopupItemClickListener implements PopupMenu.OnMenuItemClickListener {
         int position;
@@ -303,6 +312,4 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
         getSupportActionBar().setTitle(fileManager.getCurrent().getName());
         directoryUpdate();
     }
-
-
 }
