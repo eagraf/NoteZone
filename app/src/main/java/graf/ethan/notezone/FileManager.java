@@ -93,6 +93,20 @@ public class FileManager {
         return newFolder;
     }
 
+    public void deleteFolder(File folder) {
+        File[] files = folder.listFiles();
+        if(files!=null) { //some JVMs return null for empty dirs
+            for(int f = 0; f < files.length; f ++) {
+                if(files[f].isDirectory()) {
+                    deleteFolder(files[f]);
+                } else {
+                    files[f].delete();
+                }
+            }
+        }
+        folder.delete();
+    }
+
     public void selectFolder(File selected) {
         current = selected;
     }

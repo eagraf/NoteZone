@@ -94,7 +94,7 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(getString(R.string.my_notes));
+                getSupportActionBar().setTitle(fileManager.getCurrent().getName());
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -224,6 +224,10 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
 
     /*Click listener for popup menus */
     private class PopupItemClickListener implements PopupMenu.OnMenuItemClickListener {
+        int position;
+        private PopupItemClickListener(int position) {
+            this.position = position;
+        }
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
@@ -232,6 +236,8 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
                 case R.id.action_directory_copy:
                     return true;
                 case R.id.action_directory_delete:
+                    fileManager.deleteFolder(folderAdapter.getItem(position));
+                    directoryUpdate();
                     return true;
                 default:
                     return false;
@@ -245,16 +251,17 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
         mDrawerList.setItemChecked(position, true);
         fileManager.selectFolder(folderAdapter.getItem(position));
         getSupportActionBar().setTitle(fileManager.getCurrent().getName());
-        folderAdapter = new AdapterFolder(this, fileManager.getFolderChildren(), fileManager);
-        mDrawerList.setAdapter(folderAdapter);
-        fileAdapter = new AdapterFile(this, fileManager.getFileChildren(), fileManager);
-        mFileList.setAdapter(fileAdapter);
         directoryUpdate();
     }
 
 
     /*Updates views in the nav drawer every time it is called*/
     private void directoryUpdate() {
+        folderAdapter = new AdapterFolder(this, fileManager.getFolderChildren(), fileManager);
+        mDrawerList.setAdapter(folderAdapter);
+        fileAdapter = new AdapterFile(this, fileManager.getFileChildren(), fileManager);
+        mFileList.setAdapter(fileAdapter);
+
         if(fileManager.getCurrent().listFiles().length == 0) {
             rowAddFolder.setVisibility(View.VISIBLE);
             rowList.setVisibility(View.GONE);
@@ -274,7 +281,8 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
     /*Displays popup for overflow icon in list view items*/
     public void onClickShowPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(new PopupItemClickListener());
+        int position = mDrawerList.getPositionForView(v);
+        popup.setOnMenuItemClickListener(new PopupItemClickListener(position));
         menuInflater.inflate(R.menu.menu_directory, popup.getMenu());
         popup.show();
     }
@@ -293,10 +301,6 @@ public class MainActivity extends ActionBarActivity implements NameDialogFragmen
     public void onClickDirectoryBack(View v) {
         fileManager.selectParent();
         getSupportActionBar().setTitle(fileManager.getCurrent().getName());
-        folderAdapter = new AdapterFolder(this, fileManager.getFolderChildren(), fileManager);
-        mDrawerList.setAdapter(folderAdapter);
-        fileAdapter = new AdapterFile(this, fileManager.getFileChildren(), fileManager);
-        mFileList.setAdapter(fileAdapter);
         directoryUpdate();
     }
 
